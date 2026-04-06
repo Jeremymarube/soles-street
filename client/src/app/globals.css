@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Dark theme with overlay */
+  --color-background: hsl(0 0% 5%);
+  --color-foreground: hsl(0 0% 95%);
+  --color-card: hsl(0 0% 8%);
+  --color-card-foreground: hsl(0 0% 95%);
+  --color-primary: hsl(0 0% 100%);
+  --color-primary-foreground: hsl(0 0% 0%);
+  --color-secondary: hsl(0 0% 15%);
+  --color-secondary-foreground: hsl(0 0% 95%);
+  --color-muted: hsl(0 0% 12%);
+  --color-muted-foreground: hsl(0 0% 65%);
+  --color-accent: hsl(0 72% 51%);
+  --color-accent-foreground: hsl(0 0% 100%);
+  --color-border: hsl(0 0% 18%);
+  --color-input: hsl(0 0% 18%);
+  --color-ring: hsl(0 72% 51%);
+  --radius: 0.25rem;
+  --font-display: 'Oswald', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: hsl(0 0% 18%);
+  }
+  body {
+    background-color: hsl(0 0% 5%);
+    color: hsl(0 0% 95%);
+    font-family: var(--font-body);
+  }
+}
