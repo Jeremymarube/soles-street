@@ -1,24 +1,27 @@
-import ProductCard from "../../../components/ProductCard";
-import { useEffect, useState } from "react";
-import axios from "axios";
+﻿import Footer from "@/components/Footer";
+import FeaturedProductCard from "@/components/home/FeaturedProductCard";
+import Navbar from "@/components/Navbar";
+import { getProductsServer } from "@/services/productsServer";
 
-export default function MenPage() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:5000/api/products?category=men")
-      .then(res => setProducts(res.data))
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) return <p style={{ textAlign: "center" }}>Loading...</p>;
+export default async function MenPage() {
+  const products = await getProductsServer({ category: "Men" });
+  const bothProducts = await getProductsServer({ category: "Both" });
+  const visibleProducts = [...products, ...bothProducts];
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1rem", padding: "2rem" }}>
-      {products.map(product => <ProductCard key={product.id} product={product} />)}
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main className="container mx-auto px-4 py-10">
+        <h1 className="font-display text-5xl text-foreground">Men&apos;s sneakers</h1>
+        {visibleProducts.length > 0 ? (
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            {visibleProducts.map((product) => <FeaturedProductCard key={product.id} product={product} />)}
+          </div>
+        ) : (
+          <div className="mt-8 rounded-[28px] border border-dashed border-border bg-card/40 p-10 text-center text-muted-foreground">No men&apos;s or both-category shoes added yet.</div>
+        )}
+      </main>
+      <Footer />
     </div>
   );
 }

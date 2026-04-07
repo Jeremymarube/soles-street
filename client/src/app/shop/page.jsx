@@ -1,24 +1,30 @@
+﻿import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
-import { products } from "@/data/products";
+import ShopClient from "@/components/shop/ShopClient";
+import { getProductsServer } from "@/services/productsServer";
 
-const Shop = () => {
+export default async function Shop({ searchParams }) {
+  const resolvedSearchParams = await searchParams;
+  const initialFilters = {
+    search: resolvedSearchParams?.search ?? "",
+    category: resolvedSearchParams?.category ?? "All",
+    brand: resolvedSearchParams?.brand ?? "All",
+  };
+  const initialProducts = await getProductsServer(initialFilters);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container pt-24 pb-10">
-        <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-2">Shop</h1>
-        <p className="text-muted-foreground mb-10">Browse our collection</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+      <main className="container mx-auto px-4 py-10">
+        <div className="mb-8 space-y-3">
+          <p className="text-sm uppercase tracking-[0.35em] text-accent">Sneaker shop</p>
+          <h1 className="font-display text-5xl text-foreground">Browse sneakers by style, brand, and category.</h1>
+          <p className="max-w-2xl text-muted-foreground">Fast mobile browsing, visible pricing, and direct WhatsApp ordering from every card.</p>
         </div>
-      </div>
+
+        <ShopClient initialProducts={initialProducts} initialFilters={initialFilters} />
+      </main>
       <Footer />
     </div>
   );
-};
-
-export default Shop;
+}

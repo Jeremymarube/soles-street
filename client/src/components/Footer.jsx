@@ -1,76 +1,59 @@
-// src/components/Footer.jsx
-'use client';
-import Link from "next/link";
+﻿import Link from "next/link";
+import { Camera, Music2 } from "lucide-react";
 
-// Custom SVG Icons
-const InstagramIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" strokeWidth="2" stroke="currentColor"/>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" strokeWidth="2" stroke="currentColor"/>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" strokeWidth="2" stroke="currentColor"/>
-  </svg>
-);
+import { INSTAGRAM_URL, TIKTOK_URL, WHATSAPP_DISPLAY_NUMBER } from "@/data/products";
 
-const TwitterIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" strokeWidth="2" stroke="currentColor"/>
-  </svg>
-);
+const SocialLink = ({ href, icon: Icon, label }) => {
+  if (!href) {
+    return <span className="inline-flex items-center gap-2 text-muted-foreground/60"><Icon className="h-4 w-4" /> {label}</span>;
+  }
 
-const FacebookIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" strokeWidth="2" stroke="currentColor"/>
-  </svg>
+  return (
+    <a href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-muted-foreground transition hover:text-accent">
+      <Icon className="h-4 w-4" />
+      {label}
+    </a>
+  );
+};
+
+const BrandMark = () => (
+  <>
+    <span className="text-foreground">SOLE</span>
+    <span className="text-accent">STREET</span>
+  </>
 );
 
 const Footer = () => {
   return (
-    <footer 
-      className="border-t py-8 mt-auto"
-      style={{ 
-        backgroundColor: '#0d0d0d',
-        color: '#f2f2f2',
-        borderColor: '#2d2d2d'
-      }}
-    >
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="font-display text-lg font-bold mb-4">SOLESTREET</h3>
-            <p className="text-sm opacity-70">Premium sneakers for the modern streetwear enthusiast.</p>
-          </div>
-          
-          <div>
-            <h4 className="font-display font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/shop" className="hover:text-accent transition">Shop</Link></li>
-              <li><Link href="/contact" className="hover:text-accent transition">Contact</Link></li>
-              <li><Link href="/about" className="hover:text-accent transition">About Us</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-display font-semibold mb-4">Contact</h4>
-            <ul className="space-y-2 text-sm">
-              <li>Email: info@solestreet.com</li>
-              <li>Phone: +254 700 000 000</li>
-              <li>Nairobi, Kenya</li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-display font-semibold mb-4">Follow Us</h4>
-            <div className="flex space-x-4">
-              <a href="#" className="hover:text-accent transition">
-                <InstagramIcon />
-              </a>
-              
-            </div>
+    <footer className="border-t border-border bg-card/60 py-10">
+      <div className="container mx-auto grid gap-8 px-4 md:grid-cols-4">
+        <div>
+          <h3 className="font-display text-xl tracking-[0.2em]"><BrandMark /></h3>
+          <p className="mt-3 text-sm text-muted-foreground">Fresh sneaker drops, quick WhatsApp orders, and clean mobile shopping from Nairobi.</p>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Shop</p>
+          <div className="mt-3 space-y-2 text-sm">
+            <Link href="/shop" className="block text-muted-foreground hover:text-accent">All shoes</Link>
+            <Link href="/categories/men" className="block text-muted-foreground hover:text-accent">Men</Link>
+            <Link href="/categories/women" className="block text-muted-foreground hover:text-accent">Women</Link>
+            <Link href="/categories/kids" className="block text-muted-foreground hover:text-accent">Kids</Link>
           </div>
         </div>
-        
-        <div className="border-t mt-8 pt-8 text-center text-sm opacity-60" style={{ borderColor: '#2d2d2d' }}>
-          <p>&copy; 2024 SOLESTREET. All rights reserved.</p>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Support</p>
+          <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+            <p>WhatsApp: {WHATSAPP_DISPLAY_NUMBER || "Set NEXT_PUBLIC_WHATSAPP_NUMBER"}</p>
+            <p>M-Pesa checkout Coming Soon</p>
+            <p>Nairobi, Kenya</p>
+          </div>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Follow Us</p>
+          <div className="mt-3 space-y-3 text-sm">
+            <SocialLink href={INSTAGRAM_URL} icon={Camera} label="Instagram" />
+            <SocialLink href={TIKTOK_URL} icon={Music2} label="TikTok" />
+          </div>
         </div>
       </div>
     </footer>
