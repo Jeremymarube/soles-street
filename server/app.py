@@ -3,8 +3,10 @@ from datetime import timedelta
 
 from flask import Flask
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from models.db import get_db_connection
-from routes.admin import admin_bp
+from routes.admin import admin_bp, limiter as admin_limiter
 from routes.orders import orders_bp, payments_bp
 from routes.products import products_bp
 from routes.uploads import uploads_bp
@@ -16,8 +18,20 @@ app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=12)
 
+# Global rate limiter
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per hour"],
+    storage_uri="memory://",
+)
+
+# Bind the admin blueprint's limiter to this app
+admin_limiter.init_app(app)
+
 frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000")
-CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": [frontend_origin, "http://127.0.0.1:3000", "http://localhost:3000"]}})
+allowed_origins = list(filter(None, [frontend_origin, "http://127.0.0.1:3000", "http://localhost:3000"]))
+CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": allowed_origins}})
 
 
 def ensure_products_schema(cursor):

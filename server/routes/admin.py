@@ -2,8 +2,12 @@
 
 from flask import Blueprint, jsonify, request, session
 from werkzeug.security import check_password_hash
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 admin_bp = Blueprint("admin", __name__)
+
+limiter = Limiter(get_remote_address, storage_uri="memory://")
 
 
 def get_admin_credentials():
@@ -32,6 +36,7 @@ def require_admin_request():
 
 
 @admin_bp.route("/login", methods=["POST"])
+@limiter.limit("5 per minute; 20 per hour")
 def admin_login():
     data = request.get_json(silent=True) or {}
     username = (data.get("username") or "").strip()
