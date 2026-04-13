@@ -1,5 +1,7 @@
 ﻿import Link from "next/link";
-import { Camera, Music2 } from "lucide-react";
+import { Instagram, Music2 } from "lucide-react"; // Make sure Instagram is spelled correctly
+import { FaInstagram, FaTiktok } from "react-icons/fa";
+import Image from "next/image";
 
 import { INSTAGRAM_URL, TIKTOK_URL, WHATSAPP_DISPLAY_NUMBER } from "@/data/products";
 
@@ -16,11 +18,15 @@ const SocialLink = ({ href, icon: Icon, label }) => {
   );
 };
 
-const BrandMark = () => (
-  <>
-    <span className="text-foreground">SOLE</span>
-    <span className="text-accent">STREET</span>
-  </>
+const FooterLogo = () => (
+  <Image
+    src="/logo.jpg"
+    alt="SoleStreet Logo"
+    width={80}
+    height={27}
+    className="h-12 w-auto"
+    unoptimized
+  />
 );
 
 const Footer = () => {
@@ -28,7 +34,9 @@ const Footer = () => {
     <footer className="border-t border-border bg-card/60 py-10">
       <div className="container mx-auto grid gap-8 px-4 md:grid-cols-4">
         <div>
-          <h3 className="font-display text-xl tracking-[0.2em]"><BrandMark /></h3>
+          <h3 className="font-display text-xl tracking-[0.2em]">
+            <FooterLogo />
+          </h3>
           <p className="mt-3 text-sm text-muted-foreground">Fresh sneaker drops, quick WhatsApp orders, and clean mobile shopping from Nairobi.</p>
         </div>
         <div>
@@ -50,9 +58,9 @@ const Footer = () => {
         </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Follow Us</p>
-          <div className="mt-3 space-y-3 text-sm">
-            <SocialLink href={INSTAGRAM_URL} icon={Camera} label="Instagram" />
-            <SocialLink href={TIKTOK_URL} icon={Music2} label="TikTok" />
+          <div className="mt-3 flex flex-col gap-2 space-y-3 text-sm">
+            <SocialLink href={INSTAGRAM_URL} icon={FaInstagram} label="Instagram" />
+            <SocialLink href={TIKTOK_URL} icon={FaTiktok} label="TikTok" />
           </div>
         </div>
       </div>

@@ -40,7 +40,7 @@ export default function Home() {
               <p className="text-sm uppercase tracking-[0.45em] text-accent">Fast mobile sneaker store</p>
               <h1 className="mt-4 font-display text-5xl leading-none text-foreground md:text-7xl">Browse kicks. Add to cart. Checkout or order on WhatsApp.</h1>
               <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground md:text-lg">
-                Where style meets the streets. Premium sneakers, trendy kicks, and countrywide delivery every Saturday.
+                Where style meets the streets. Premium sneakers, trendy kicks, and countrywide delivery every Saturday. Make sure to clear cart after order. Countrywide Delivery every Saturday.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" className="h-12 bg-accent px-6 text-accent-foreground hover:bg-accent/90">

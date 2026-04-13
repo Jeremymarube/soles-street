@@ -1,4 +1,5 @@
 ﻿import { Camera, MessageCircle, Music2 } from "lucide-react";
+import { FaInstagram, FaTiktok } from "react-icons/fa";
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -37,15 +38,44 @@ export default function ContactPage() {
           </div>
 
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
-            <a href={hasWhatsApp ? contactLink : "#"} target="_blank" rel="noreferrer" className={`rounded-2xl border border-border px-4 py-4 text-sm ${hasWhatsApp ? "hover:border-accent hover:text-accent" : "pointer-events-none text-muted-foreground/60"}`}>
-              <span className="inline-flex items-center gap-2"><MessageCircle className="h-4 w-4" /> WhatsApp</span>
-            </a>
-            <a href={INSTAGRAM_URL || "#"} target="_blank" rel="noreferrer" className={`rounded-2xl border border-border px-4 py-4 text-sm ${INSTAGRAM_URL ? "hover:border-accent hover:text-accent" : "pointer-events-none text-muted-foreground/60"}`}>
-              <span className="inline-flex items-center gap-2"><Camera className="h-4 w-4" /> Instagram</span>
-            </a>
-            <a href={TIKTOK_URL || "#"} target="_blank" rel="noreferrer" className={`rounded-2xl border border-border px-4 py-4 text-sm ${TIKTOK_URL ? "hover:border-accent hover:text-accent" : "pointer-events-none text-muted-foreground/60"}`}>
-              <span className="inline-flex items-center gap-2"><Music2 className="h-4 w-4" /> TikTok</span>
-            </a>
+            <a 
+  href={hasWhatsApp ? contactLink : "#"} 
+  target="_blank" 
+  rel="noreferrer" 
+  className={`rounded-2xl px-4 py-4 text-sm flex items-center justify-center
+    ${hasWhatsApp 
+      ? "bg-green-600 text-white hover:bg-green-700" 
+      : "pointer-events-none bg-gray-300 text-gray-500"
+    }`}
+>
+  <span className="inline-flex items-center gap-2">
+    <MessageCircle className="h-4 w-4" /> 
+    WhatsApp
+  </span>
+</a>
+            <a 
+  href={INSTAGRAM_URL || "#"} 
+  target="_blank" 
+  rel="noreferrer" 
+  className={`rounded-2xl border border-border px-4 py-4 text-sm ${INSTAGRAM_URL ? "hover:border-accent hover:text-accent" : "pointer-events-none text-muted-foreground/60"}`}
+>
+  <span className="inline-flex items-center gap-2">
+    <FaInstagram className="h-4 w-4" /> 
+    Instagram
+  </span>
+</a>
+
+<a 
+  href={TIKTOK_URL || "#"} 
+  target="_blank" 
+  rel="noreferrer" 
+  className={`rounded-2xl border border-border px-4 py-4 text-sm ${TIKTOK_URL ? "hover:border-accent hover:text-accent" : "pointer-events-none text-muted-foreground/60"}`}
+>
+  <span className="inline-flex items-center gap-2">
+    <FaTiktok className="h-4 w-4" /> 
+    TikTok
+  </span>
+</a>
           </div>
         </div>
       </main>

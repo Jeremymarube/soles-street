@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu, Search, ShoppingBag, Shield, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image"; // Use Image directly - this works fine
 
 import { useCart } from "@/context/CartContext";
 
@@ -16,11 +17,16 @@ const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-const BrandMark = () => (
-  <>
-    <span className="text-foreground">SOLE</span>
-    <span className="text-accent">STREET</span>
-  </>
+const Logo = () => (
+  <Image
+    src="/logo.jpg"
+    alt="SoleStreet Logo"
+    width={120}
+    height={40}
+    className="h-12 w-auto"
+    priority
+    unoptimized // Add this if you're having issues with image optimization
+  />
 );
 
 const Navbar = () => {
@@ -42,8 +48,8 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
       <div className="container mx-auto flex h-18 items-center justify-between gap-4 px-4">
-        <Link href="/" className="font-display text-2xl font-bold tracking-[0.25em]">
-          <BrandMark />
+        <Link href="/" className="flex items-center">
+          <Logo />
         </Link>
 
         <div className="hidden items-center gap-6 md:flex">

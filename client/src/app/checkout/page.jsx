@@ -68,7 +68,7 @@ export default function CheckoutPage() {
     ? mpesaStatus.environment === "production"
       ? `Live M-Pesa is enabled. Payments will go to shortcode ${mpesaStatus.shortcode}.`
       : `Sandbox M-Pesa is enabled for shortcode ${mpesaStatus.shortcode}.`
-    : "M-Pesa STK push is currently disabled on this server until the receiving account is confirmed.";
+    : "M-Pesa STK push is currently disabled.";
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,14 +87,14 @@ export default function CheckoutPage() {
           <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
             <div className="rounded-[28px] border border-border bg-card p-6">
               <div className="grid gap-4 md:grid-cols-2">
-                <label className="space-y-2 text-sm text-muted-foreground">
+                {/* <label className="space-y-2 text-sm text-muted-foreground">
                   <span>Full name</span>
                   <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} className="h-11 w-full rounded-2xl border border-border bg-background px-4 text-foreground outline-none" placeholder="Jane Doe" />
                 </label>
                 <label className="space-y-2 text-sm text-muted-foreground">
                   <span>M-Pesa phone number</span>
                   <input value={phone} onChange={(event) => setPhone(event.target.value)} className="h-11 w-full rounded-2xl border border-border bg-background px-4 text-foreground outline-none" placeholder="07XXXXXXXX" />
-                </label>
+                </label> */}
               </div>
 
               <div className="mt-6 rounded-[24px] border border-border bg-background/40 p-5">
@@ -120,12 +120,23 @@ export default function CheckoutPage() {
                 {mpesaWarning}
               </div>
               <div className="mt-5 space-y-3">
-                <Button onClick={handleMpesaPayment} disabled={isPaying || !phone} className="h-11 w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                  {isPaying ? "Sending prompt..." : "Pay with M-Pesa"}
-                </Button>
-                <Button onClick={handleWhatsAppCheckout} variant="outline" className="h-11 w-full border-border text-foreground">
-                  Checkout on WhatsApp
-                </Button>
+                <Button 
+  onClick={handleMpesaPayment} 
+  disabled={isPaying || !phone}
+  className={`h-11 w-full transition-all duration-200
+    ${(isPaying || !phone) 
+      ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+      : 'bg-accent text-accent-foreground hover:bg-accent/90'
+    }`}
+>
+  {isPaying ? "Processing..." : !phone ? "Mpesa Checkout Coming Soon" : "Pay with M-Pesa"}
+</Button>
+                <Button 
+  onClick={handleWhatsAppCheckout} 
+  className="h-11 w-full bg-green-600 text-white hover:bg-green-700"
+>
+  Order on WhatsApp
+</Button>
                 <Button onClick={clearCart} variant="ghost" className="h-11 w-full text-muted-foreground hover:text-foreground">
                   Clear cart after order
                 </Button>
