@@ -5,6 +5,8 @@ from datetime import datetime
 import requests
 from flask import Blueprint, jsonify, request
 
+from extensions import limiter
+
 mpesa_bp = Blueprint('mpesa', __name__)
 
 MPESA_ENV = os.getenv('MPESA_ENV', 'sandbox').strip().lower()
@@ -113,6 +115,7 @@ def generate_password(shortcode, passkey):
 
 
 @mpesa_bp.route('/status', methods=['GET'])
+@limiter.limit('30 per minute')
 def mpesa_status():
     config = get_config()
     return jsonify({
@@ -126,6 +129,7 @@ def mpesa_status():
 
 
 @mpesa_bp.route('/stk-push', methods=['POST'])
+@limiter.limit('5 per minute')
 def stk_push():
     data = request.get_json(silent=True) or {}
     phone = str(data.get('phone', '')).strip()
@@ -210,7 +214,7 @@ def callback():
     print('=' * 50)
     print('M-Pesa callback received at:', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     print('M-Pesa environment:', MPESA_ENV)
-    print('Callback data:', data)
+    print('Callback keys:', list(data.keys()))
     print('=' * 50)
 
     try:

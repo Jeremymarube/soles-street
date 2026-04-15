@@ -5,6 +5,7 @@ from datetime import datetime
 import requests
 from flask import Blueprint, jsonify, request
 
+from extensions import limiter
 from models.db import get_db_connection
 from routes.mpesa import (
     ACCOUNT_REFERENCE,
@@ -23,6 +24,7 @@ orders_bp = Blueprint("orders", __name__)
 payments_bp = Blueprint("payments", __name__)
 
 PHONE_REGEX = re.compile(r"^(0\d{9}|254\d{9})$")
+PAYMENT_METHODS = {"WhatsApp", "M-Pesa"}
 
 
 def normalize_mpesa_phone(phone):
@@ -34,11 +36,85 @@ def normalize_mpesa_phone(phone):
     return digits
 
 
-@orders_bp.route("/", methods=["POST"])
+def parse_cart(data):
+    raw_cart = data.get("cart", [])
+    if not isinstance(raw_cart, list) or not raw_cart:
+        return None, "Cart must contain at least one item."
+
+    parsed_cart = []
+    for item in raw_cart:
+        if not isinstance(item, dict):
+            return None, "Each cart item must be a valid object."
+
+        product_id = str(item.get("id", "")).strip()
+        name = str(item.get("name", "")).strip()
+
+        try:
+            price = int(item.get("price", 0))
+            quantity = int(item.get("quantity", 0))
+        except (TypeError, ValueError):
+            return None, "Each cart item must include a valid price and quantity."
+
+        if not product_id or not name:
+            return None, "Each cart item must include an id and name."
+
+        if price <= 0 or quantity <= 0:
+            return None, "Each cart item must have a positive price and quantity."
+
+        parsed_cart.append(
+            {
+                "id": product_id,
+                "name": name,
+                "price": price,
+                "quantity": quantity,
+                "size": item.get("size"),
+            }
+        )
+
+    return parsed_cart, None
+
+
+def parse_order_payload(data):
+    customer_name = str(data.get("customerName", "")).strip()
+    phone = normalize_mpesa_phone(data.get("phone"))
+    payment_method = str(data.get("paymentMethod", "WhatsApp")).strip() or "WhatsApp"
+    whatsapp_message = str(data.get("whatsappMessage", "")).strip()
+
+    customer_name = customer_name or "WhatsApp Customer"
+
+    if len(customer_name) > 120:
+        return None, "Customer name is too long."
+
+    if phone and not PHONE_REGEX.match(phone):
+        return None, "Enter a valid Safaricom number like 07XXXXXXXX or 2547XXXXXXXX."
+
+    if payment_method not in PAYMENT_METHODS:
+        return None, "Choose a valid payment method."
+
+    cart, cart_error = parse_cart(data)
+    if cart_error:
+        return None, cart_error
+
+    total = sum(item["price"] * item["quantity"] for item in cart)
+    if total <= 0:
+        return None, "Order total must be greater than zero."
+
+    return {
+        "customer_name": customer_name,
+        "phone": phone,
+        "payment_method": payment_method,
+        "whatsapp_message": whatsapp_message,
+        "cart": cart,
+        "total": total,
+    }, None
+
+
+@orders_bp.route("/", methods=["POST"], strict_slashes=False)
+@limiter.limit("20 per minute")
 def create_order():
-    data = request.get_json() or {}
-    cart = data.get("cart", [])
-    total = sum((item.get("price", 0) * item.get("quantity", 1)) for item in cart)
+    payload, error_message = parse_order_payload(request.get_json(silent=True) or {})
+    if error_message:
+        return jsonify({"message": error_message}), 400
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -49,13 +125,13 @@ def create_order():
         RETURNING *
         """,
         (
-            data.get("customerName"),
-            data.get("phone"),
-            data.get("paymentMethod", "WhatsApp"),
-            total,
-            data.get("whatsappMessage"),
+            payload["customer_name"],
+            payload["phone"],
+            payload["payment_method"],
+            payload["total"],
+            payload["whatsapp_message"],
             "pending",
-            json.dumps(cart),
+            json.dumps(payload["cart"]),
             datetime.utcnow(),
         ),
     )
@@ -67,10 +143,14 @@ def create_order():
 
 
 @payments_bp.route("/mpesa", methods=["POST"])
+@limiter.limit("10 per minute")
 def initiate_mpesa_payment():
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     phone = normalize_mpesa_phone(data.get("phone"))
-    amount = int(data.get("amount", 0) or 0)
+    try:
+        amount = int(data.get("amount", 0) or 0)
+    except (TypeError, ValueError):
+        return jsonify({"message": "Enter a valid payment amount."}), 400
     order_id = data.get("orderId")
 
     if not PHONE_REGEX.match(phone):

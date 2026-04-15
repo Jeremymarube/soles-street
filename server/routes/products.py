@@ -4,6 +4,7 @@ from datetime import datetime
 
 from flask import Blueprint, jsonify, request
 
+from extensions import limiter
 from models.db import get_db_connection
 from routes.admin import require_admin_request
 
@@ -78,7 +79,7 @@ def parse_product_payload(data):
     }, None
 
 
-@products_bp.route("/", methods=["GET"])
+@products_bp.route("/", methods=["GET"], strict_slashes=False)
 def get_products():
     search = request.args.get("search", "").strip().lower()
     category = request.args.get("category", "All")
@@ -131,7 +132,8 @@ def get_product(product_id):
     return jsonify(normalize_product(product))
 
 
-@products_bp.route("/", methods=["POST"])
+@products_bp.route("/", methods=["POST"], strict_slashes=False)
+@limiter.limit("10 per minute")
 def create_product():
     auth_error = require_admin_request()
     if auth_error:
@@ -173,6 +175,7 @@ def create_product():
 
 
 @products_bp.route("/<product_id>", methods=["PUT"])
+@limiter.limit("10 per minute")
 def update_product(product_id):
     auth_error = require_admin_request()
     if auth_error:
@@ -229,6 +232,7 @@ def update_product(product_id):
 
 
 @products_bp.route("/<product_id>", methods=["DELETE"])
+@limiter.limit("10 per minute")
 def delete_product(product_id):
     auth_error = require_admin_request()
     if auth_error:
@@ -246,3 +250,4 @@ def delete_product(product_id):
         return jsonify({"message": "Product not found"}), 404
 
     return jsonify({"message": "Product deleted", "id": product_id})
+
