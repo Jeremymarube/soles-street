@@ -8,6 +8,7 @@ const backendBaseUrl = process.env.BACKEND_API_URL ?? "http://localhost:5000/api
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
+  outputFileTracingRoot: __dirname,  // Add this line
   turbopack: {
     root: __dirname,
   },

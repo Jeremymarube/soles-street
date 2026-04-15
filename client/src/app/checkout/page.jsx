@@ -19,7 +19,7 @@ export default function CheckoutPage() {
   const [isPaying, setIsPaying] = useState(false);
   const [mpesaStatus, setMpesaStatus] = useState(null);
 
-  const paymentMethod = "M-Pesa / WhatsApp";
+  const paymentMethod = "WhatsApp";
   const orderPayload = { cart, customerName, phone, paymentMethod };
   const whatsappLink = createCartOrderLink(orderPayload);
 

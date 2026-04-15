@@ -8,7 +8,7 @@ export const getProducts = async (filters = {}) => {
   if (filters.brand && filters.brand !== "All") params.set("brand", filters.brand);
   if (filters.featured !== undefined) params.set("featured", String(filters.featured));
 
-  return apiFetch(`/products/${params.toString() ? `?${params.toString()}` : ""}`);
+  return apiFetch(`/products${params.toString() ? `?${params.toString()}` : ""}`);
 };
 
 export const getFeaturedProducts = () => getProducts({ featured: true });
@@ -25,7 +25,7 @@ export const saveProduct = async (product) => {
     });
   }
 
-  return apiFetch("/products/", {
+  return apiFetch("/products", {
     method: "POST",
     body: JSON.stringify(product),
     admin: true,
@@ -33,7 +33,7 @@ export const saveProduct = async (product) => {
 };
 
 export const createProduct = (product) =>
-  apiFetch("/products/", {
+  apiFetch("/products", {
     method: "POST",
     body: JSON.stringify(product),
     admin: true,

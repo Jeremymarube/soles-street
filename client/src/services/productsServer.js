@@ -11,7 +11,7 @@ const buildProductsUrl = (filters = {}) => {
   if (filters.brand && filters.brand !== "All") params.set("brand", filters.brand);
   if (filters.featured !== undefined) params.set("featured", String(filters.featured));
 
-  return `${SERVER_API_BASE_URL}/products/${params.toString() ? `?${params.toString()}` : ""}`;
+  return `${SERVER_API_BASE_URL}/products${params.toString() ? `?${params.toString()}` : ""}`;
 };
 
 export const getProductsServer = async (filters = {}) => {
