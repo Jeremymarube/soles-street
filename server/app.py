@@ -67,7 +67,7 @@ allowed_origins = [
 ]
 CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": allowed_origins}})
 
-if app_env == "production" and limiter.storage_uri.startswith("memory://"):
+if app_env == "production" and limiter._storage_uri.startswith("memory://"):
     app.logger.warning(
         "Rate limiting is using in-memory storage. Configure RATE_LIMIT_STORAGE_URI for multi-instance production deployments."
     )
