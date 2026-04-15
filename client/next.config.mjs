@@ -12,13 +12,11 @@ const nextConfig = {
   turbopack: {
     root: __dirname,
   },
-  // Disable TypeScript checking since you're not using TypeScript
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true,  // Added for JS-only project
   },
-  // Also disable ESLint if you don't have it configured
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true,  // Optional: add this too
   },
   async rewrites() {
     return [
