@@ -1,5 +1,9 @@
 ﻿"use client";
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
+
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -8,8 +12,6 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { adminLogin, getAdminSession } from "@/services/adminService";
-
-export const dynamic = 'force-dynamic';
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -32,6 +34,7 @@ export default function AdminLoginPage() {
           return;
         }
       } catch {
+        // Silent fail
       }
 
       if (active) {
