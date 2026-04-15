@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { MessageCircle } from "lucide-react";
 
 import AddToCartButton from "@/components/AddToCartButton";
@@ -15,7 +15,7 @@ import { getProductById } from "@/services/productsService";
 const FALLBACK_IMAGE = "/images/hero-sneakers.jpg";
 
 export default function ProductDetails({ params }) {
-  const { id } = use(params);
+  const { id } = params;
   const [product, setProduct] = useState(null);
   const [imageSrc, setImageSrc] = useState(FALLBACK_IMAGE);
   const [selectedSize, setSelectedSize] = useState(null);

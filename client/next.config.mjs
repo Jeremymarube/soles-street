@@ -13,11 +13,12 @@ const nextConfig = {
     root: __dirname,
   },
   typescript: {
-    ignoreBuildErrors: true,  // Added for JS-only project
+    ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,  // Optional: add this too
-  },
+  // ❌ REMOVE this entire eslint block:
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
   async rewrites() {
     return [
       {
