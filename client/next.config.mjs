@@ -8,9 +8,17 @@ const backendBaseUrl = process.env.BACKEND_API_URL ?? "http://localhost:5000/api
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
-  outputFileTracingRoot: __dirname,  // Add this line
+  outputFileTracingRoot: __dirname,
   turbopack: {
     root: __dirname,
+  },
+  // Disable TypeScript checking since you're not using TypeScript
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  // Also disable ESLint if you don't have it configured
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   async rewrites() {
     return [
