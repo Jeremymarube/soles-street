@@ -9,6 +9,8 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { adminLogin, getAdminSession } from "@/services/adminService";
 
+export const dynamic = 'force-dynamic';
+
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function AdminLoginPage() {
