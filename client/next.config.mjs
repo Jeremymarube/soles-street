@@ -20,13 +20,13 @@ const nextConfig = {
   //   ignoreDuringBuilds: true,
   // },
   async rewrites() {
-    return [
-      {
-        source: "/backend-api/:path*",
-        destination: `${backendBaseUrl}/:path*`,
-      },
-    ];
-  },
+  return [
+    {
+      source: "/backend-api/:path*",
+      destination: `${backendBaseUrl}/api/:path*`,
+    },
+  ];
+},
 };
 
 export default nextConfig;
