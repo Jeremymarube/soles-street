@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {  useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { MessageCircle } from "lucide-react";
 
 import AddToCartButton from "@/components/AddToCartButton";
@@ -15,14 +15,13 @@ import { getProductById } from "@/services/productsService";
 const FALLBACK_IMAGE = "/images/hero-sneakers.jpg";
 
 export default function ProductDetails({ params }) {
-  const { id } = params;
+  const { id } = use(params);
   const [product, setProduct] = useState(null);
   const [imageSrc, setImageSrc] = useState(FALLBACK_IMAGE);
   const [selectedSize, setSelectedSize] = useState(null);
 
   useEffect(() => {
     let active = true;
-
     const loadProduct = async () => {
       try {
         const result = await getProductById(id);
@@ -39,12 +38,8 @@ export default function ProductDetails({ params }) {
         }
       }
     };
-
     loadProduct();
-
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, [id]);
 
   if (!product) {
