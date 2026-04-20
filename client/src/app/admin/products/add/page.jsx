@@ -70,7 +70,7 @@ export default function AddProduct() {
     try {
       await createProduct({
         ...form,
-        id: `${form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}`,
+        id: `${form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-${Date.now()}`,
         price: Number(form.price),
         sizes,
         in_stock: true,
